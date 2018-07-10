@@ -1,4 +1,4 @@
-package com.noumsi.christian.moodtracker.controller;
+package com.noumsi.christian.moodtracker.controller.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,8 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.PopupMenu;
-
 import com.noumsi.christian.moodtracker.R;
 import com.noumsi.christian.moodtracker.adapters.PageAdapter;
 import com.noumsi.christian.moodtracker.model.Mood;
@@ -34,11 +32,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String PREF_NOTE_MOOD = "mood_note";
     private static final String PREF_DATE_MOOD = "mood_date";
 
-    List<Mood> mMoodList;
+    private List<Mood> mMoodList;
     private String mDate;
     private int mPositionFistMood;
     private String mNoteFirstMood;
-
     private SharedPreferences mSharedPreferences;
 
     @Override
@@ -46,18 +43,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initMoodList();
-
         mSharedPreferences = getPreferences(MODE_PRIVATE);
-
-        // We load preferences saved
+        initMoodList();
+        // We load saved preferences
         loadMoodPreferences();
-
 
         configureVerticalViewPager();
         configureImageButton();
     }
 
+    // Initialise note and history button, and add onclick listener
     private void configureImageButton() {
         // Initialise button widgets
         ImageButton noteButton = findViewById(R.id.activity_main_add_note_ibtn);
@@ -89,11 +84,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         verticalViewPager.setAdapter(new PageAdapter(getSupportFragmentManager(), mMoodList));
         // Define the current item
         verticalViewPager.setCurrentItem(mPositionFistMood);
+        // listening change of page and get position value
         verticalViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
             @Override
             public void onPageSelected(int position) {
@@ -101,9 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
+            public void onPageScrollStateChanged(int state) { }
         });
     }
 
@@ -130,8 +122,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             mPositionFistMood = mSharedPreferences.getInt(PREF_POSITION_MOOD, 0);
             mNoteFirstMood = mSharedPreferences.getString(PREF_NOTE_MOOD, "");
-            System.out.println("First position : " + mNoteFirstMood + " registered on " + mDate);
-
             if (!mDate.equalsIgnoreCase(actualDate)){
                 // We save precedent mood preferences finally in a mood.txt file
                 saveMoodInFile(mPositionFistMood, mNoteFirstMood, mDate);
@@ -169,10 +159,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // We configure an editable text
                 final EditText editText = new EditText(this);
                 editText.setTextIsSelectable(true);
+                editText.setText(mNoteFirstMood);
+                editText.setSelection(mNoteFirstMood.length());
 
                 // Implement AlertDialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Commentaire")
+                final AlertDialog alertDialog = builder.setTitle("Commentaire")
                         .setView(editText)
                         .setPositiveButton("Valider", new DialogInterface.OnClickListener() {
                             @Override
@@ -180,12 +172,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 mNoteFirstMood = editText.getText().toString();
                             }
                         }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).create().show();
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).create();
 
+                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                            @Override
+                            public void onShow(DialogInterface dialog) {
+                                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.home_button));
+                                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.home_button));
+                            }
+                        });
+                alertDialog.show();
                 break;
             case 2:
                 // Open the last seven Mood History Activity

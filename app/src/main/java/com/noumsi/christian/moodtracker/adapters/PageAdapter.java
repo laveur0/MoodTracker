@@ -23,7 +23,7 @@ public class PageAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return MoodPageFragment.newInstance(position, mMoodList.get(position));
+        return MoodPageFragment.newInstance(mMoodList.get(position));
     }
 
     @Override
