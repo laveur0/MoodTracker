@@ -3,6 +3,7 @@ package com.noumsi.christian.moodtracker.controller.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.noumsi.christian.moodtracker.R;
+import com.noumsi.christian.moodtracker.model.Mood;
+
+import java.io.Serializable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +22,6 @@ public class MoodPageFragment extends Fragment {
 
     private static final String KEY_POSITION = "position";
     private static final String KEY_MOOD = "mood";
-    private static final String KEY_COLOR = "color";
 
     public MoodPageFragment() {
         // Required empty public constructor
@@ -28,18 +31,16 @@ public class MoodPageFragment extends Fragment {
      * Method will able to create an instance of the fragment with some parameters
      * necessary for display correct smile and color
      * @param position the position of smile in array of smiles
-     * @param mood A reference to smile to display
-     * @param color Reference to the color of smile
+     * @param mood A Mood object
      * @return
      */
-    public static MoodPageFragment newInstance(int position, int mood, int color){
+    public static MoodPageFragment newInstance(int position, Mood mood){
 
         MoodPageFragment moodPageFragment = new MoodPageFragment();
 
         Bundle args = new Bundle();
+        args.putSerializable(KEY_MOOD, mood);
         args.putInt(KEY_POSITION, position);
-        args.putInt(KEY_MOOD, mood);
-        args.putInt(KEY_COLOR, color);
 
         moodPageFragment.setArguments(args);
 
@@ -53,17 +54,15 @@ public class MoodPageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_mood_page, container, false);
 
         // Get widgets from layout and serialise it
-        LinearLayout linearLayout = view.findViewById(R.id.fragment_mood_page_linear_layout);
         ImageView smileImg = view.findViewById(R.id.fragment_mood_page_smile_img);
 
         // Get data from bundle
         int position = getArguments().getInt(KEY_POSITION, -1);
-        int mood = getArguments().getInt(KEY_MOOD, -1);
-        int color = getArguments().getInt(KEY_COLOR,-1);
+        Mood mood = (Mood) getArguments().getSerializable(KEY_MOOD);
 
         // Update widgets with data
-        linearLayout.setBackgroundColor(color);
-        smileImg.setImageResource(mood);
+        view.setBackgroundResource(mood.getColorRef());
+        smileImg.setImageResource(mood.getImageRef());
 
         return view;
     }
