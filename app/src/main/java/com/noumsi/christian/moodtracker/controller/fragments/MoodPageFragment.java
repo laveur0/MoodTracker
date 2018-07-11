@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.noumsi.christian.moodtracker.R;
 import com.noumsi.christian.moodtracker.model.Mood;
@@ -17,7 +18,7 @@ import com.noumsi.christian.moodtracker.model.Mood;
  */
 public class MoodPageFragment extends Fragment {
 
-    private static final String KEY_MOOD = "mood";
+    public static final String KEY_MOOD = "mood";
 
     public MoodPageFragment() {
         // Required empty public constructor
