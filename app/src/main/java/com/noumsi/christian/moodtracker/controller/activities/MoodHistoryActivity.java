@@ -1,7 +1,6 @@
 package com.noumsi.christian.moodtracker.controller.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,9 +21,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class MoodHistoryActivity extends AppCompatActivity implements View.OnClickListener{
+public class MoodHistoryActivity extends ParentActivity implements View.OnClickListener {
 
-    List<Mood> mMoodList;
+    List<Mood> mMoods;
     private LinearLayout mLinearLayout;
     private TextView mTextView;
     private ImageView mImageView;
@@ -36,14 +35,14 @@ public class MoodHistoryActivity extends AppCompatActivity implements View.OnCli
 
         // We get all mood in file "mood.txt"
         getAllMoodHistory();
-
+        // we associate xml widgets to my attributes
         serializeWidgets();
     }
 
     private void serializeWidgets() {
-        for (int i = 0; i < 7; i++){
+        for (int i = 0; i < 7; i++) {
             // For each turn we serialize widget corresponding and apply params of mood
-            switch (i){
+            switch (i) {
                 case 0:
                     mLinearLayout = findViewById(R.id.activity_mood_history_7);
                     mTextView = findViewById(R.id.activity_mood_history_text_view_7);
@@ -91,26 +90,26 @@ public class MoodHistoryActivity extends AppCompatActivity implements View.OnCli
     }
 
     // We define the background color of view, set date and show or hide imageView
-    private void configureTextViewAndImageView(int position){
+    private void configureTextViewAndImageView(int position) {
         float imgWeight = 0.5f;
         // if list of mood is empty, we do not do anything
-        if (!mMoodList.isEmpty() && mMoodList.size() > position) {
+        if (!mMoods.isEmpty() && mMoods.size() > position) {
             // We define color of layout
-            mTextView.setBackgroundResource(mMoodList.get(position).getColorRef());
-            mImageView.setBackgroundResource(mMoodList.get(position).getColorRef());
+            mTextView.setBackgroundResource(mMoods.get(position).getColorRef());
+            mImageView.setBackgroundResource(mMoods.get(position).getColorRef());
 
             // set on click listener on image view
             mImageView.setOnClickListener(this);
 
             // we set visibility of image view
-            if (!mMoodList.get(position).getNote().isEmpty()) {
+            if (!mMoods.get(position).getNote().isEmpty()) {
                 mImageView.setVisibility(View.VISIBLE);
                 imgWeight = 0f;
             } else
                 mImageView.setVisibility(View.GONE);
 
             // We define width of mood view
-            switch (mMoodList.get(position).getColorRef()) {
+            switch (mMoods.get(position).getColorRef()) {
                 case R.color.faded_red:
                     configureWidthMoodView(0.5f + imgWeight, 0.5f - imgWeight);
                     break;
@@ -136,7 +135,7 @@ public class MoodHistoryActivity extends AppCompatActivity implements View.OnCli
     /**
      * We set weight of text and image view
      * @param textWeight weight of text view
-     * @param imgWeight weight of image view
+     * @param imgWeight  weight of image view
      */
     private void configureWidthMoodView(float textWeight, float imgWeight) {
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mTextView.getLayoutParams();
@@ -153,10 +152,10 @@ public class MoodHistoryActivity extends AppCompatActivity implements View.OnCli
      * @return result
      */
     private String getTimeDuration(int position) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd / MM / yyyy", Locale.FRENCH);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getString(R.string.date_format), Locale.FRENCH);
         String result = "";
         try {
-            Date pastDate = simpleDateFormat.parse(mMoodList.get(position).getDate());
+            Date pastDate = simpleDateFormat.parse(mMoods.get(position).getDate());
             // different between actual date and pass date
             long diff = Calendar.getInstance().getTimeInMillis() - pastDate.getTime();
             // we get the number of days who correspond to the difference between two date
@@ -169,7 +168,7 @@ public class MoodHistoryActivity extends AppCompatActivity implements View.OnCli
             else if (numbDays < 7)
                 result = getResources().getString(R.string.other_days, numbDays);
             else {
-                int numbWeek = numbDays / 7, daysAfterWeek = (int)((double)numbDays % 7);
+                int numbWeek = numbDays / 7, daysAfterWeek = (int) ((double) numbDays % 7);
                 if (numbWeek == 1) {
                     if (daysAfterWeek == 0)
                         result = getResources().getString(R.string.one_week);
@@ -178,10 +177,12 @@ public class MoodHistoryActivity extends AppCompatActivity implements View.OnCli
                     else
                         result = getResources().getString(R.string.one_week_other_days, daysAfterWeek);
                 } else {
-                    if (daysAfterWeek == 1)
+                    if (daysAfterWeek == 0)
+                        result = getResources().getString(R.string.other_week, numbWeek);
+                    else if (daysAfterWeek == 1)
                         result = getResources().getString(R.string.other_week_one_days, numbWeek);
                     else
-                        result = getResources().getString(R.string.other_week_other_days, new int[]{numbWeek, daysAfterWeek});
+                        result = getResources().getString(R.string.other_week_other_days, numbWeek, daysAfterWeek);
                 }
             }
         } catch (ParseException e) {
@@ -191,10 +192,10 @@ public class MoodHistoryActivity extends AppCompatActivity implements View.OnCli
     }
 
     // get the seven last saved mood
-    private void getAllMoodHistory(){
-        mMoodList = new ArrayList<>();
+    private void getAllMoodHistory() {
+        mMoods = new ArrayList<>();
         try {
-            MoodFile.readMoodList(this, mMoodList);
+            MoodFile.readMoodList(this, mMoods);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -207,13 +208,14 @@ public class MoodHistoryActivity extends AppCompatActivity implements View.OnCli
 
     /**
      * Method to create a toast for display saved note of a view
+     *
      * @param position position of mood concerned
      */
-    private void configureToast(int position){
+    private void configureToast(int position) {
         // We personalise a textView
         TextView textView = new TextView(MoodHistoryActivity.this);
         textView.setBackgroundResource(R.color.toast_bg);
-        textView.setText(mMoodList.get(position).getNote());
+        textView.setText(mMoods.get(position).getNote());
         textView.setTextSize(18);
         textView.setAllCaps(false);
         textView.setPadding(80, 30, 80, 30);

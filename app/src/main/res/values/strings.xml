@@ -10,6 +10,7 @@
     <string name="one_week">Il y a une semaine</string>
     <string name="one_week_one_days">Il y a une semaine un jour</string>
     <string name="one_week_other_days">Il y a une semaine %d jours</string>
+    <string name="other_week">Il y a %d semaines</string>
     <string name="other_week_one_days">Il y a %d semaines un jour</string>
     <string name="other_week_other_days">Il y a %d semaines %d jours</string>
     <string name="alert_dialog_note_title">Commentaire</string>
