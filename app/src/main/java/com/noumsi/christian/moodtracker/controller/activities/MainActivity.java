@@ -10,15 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+
 import com.noumsi.christian.moodtracker.R;
 import com.noumsi.christian.moodtracker.adapters.PageAdapter;
 import com.noumsi.christian.moodtracker.model.Mood;
+import com.noumsi.christian.moodtracker.model.MoodFile;
 import com.noumsi.christian.moodtracker.view.VerticalViewPager;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String PREF_POSITION_MOOD = "mood_position";
     private static final String PREF_NOTE_MOOD = "mood_note";
     private static final String PREF_DATE_MOOD = "mood_date";
+    public static final String PREF_SAVED_MOOD_NUMBER = "saved_mood_number";
 
     private List<Mood> mMoodList;
     private String mDate;
@@ -45,14 +44,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mSharedPreferences = getPreferences(MODE_PRIVATE);
         initMoodList();
-        // We load saved preferences
-        loadMoodPreferences();
 
+        // If date has changed, we save mood in file
+        if (!isSameDate()) {
+            if (!mDate.isEmpty()){
+                loadMoodOfPreferences();
+                saveMoodInFile();
+            }
+            // We initialise date, position and note because the day has changed
+            initialiseMoodPreferences();
+            // We save mood in preferences
+            saveMoodInPreferences();
+        }
+        else {
+            // We load saved preferences
+            loadMoodOfPreferences();
+        }
         configureVerticalViewPager();
         configureImageButton();
     }
 
-    // Initialise note and history button, and add onclick listener
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // If it is not same date, we save mood in file
+        if (!isSameDate()){
+            saveMoodInFile();
+            saveMoodInPreferences();
+        }
+    }
+
+    // Initialise note and history image button, and add onclick listener
     private void configureImageButton() {
         // Initialise button widgets
         ImageButton noteButton = findViewById(R.id.activity_main_add_note_ibtn);
@@ -91,7 +113,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onPageSelected(int position) {
+                // If date has changed i save mood in file
+                if (!isSameDate()){
+                    // We save precedent mood preferences in file mood.txt
+                    saveMoodInFile();
+                }
                 mPositionFistMood = position;
+                // saving in preferences mood
+                saveMoodInPreferences();
             }
 
             @Override
@@ -100,60 +129,71 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     // Here, we save position of actual mood in preferences
-    private void saveTemporallyMoodPreferences(){
+    private void saveMoodInPreferences(){
         mSharedPreferences.edit().putInt(PREF_POSITION_MOOD, mPositionFistMood).apply();
         mSharedPreferences.edit().putString(PREF_NOTE_MOOD, mNoteFirstMood).apply();
-        String actualDate = new SimpleDateFormat("dd / MM / yyyy", Locale.FRENCH).format(Calendar.getInstance().getTime());
+        String actualDate = new SimpleDateFormat(getString(R.string.date_format), Locale.FRENCH).format(Calendar.getInstance().getTime());
         mSharedPreferences.edit().putString(PREF_DATE_MOOD, actualDate).apply();
     }
 
-    // Here, we load position of saved mood
-    private void loadMoodPreferences(){
-        // We get date and if it is different of actual date, we initialise preferences
-        Date calendar = Calendar.getInstance().getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd / MM / yyyy", Locale.FRENCH);
-        String actualDate = simpleDateFormat.format(calendar);
-        mDate = mSharedPreferences.getString(PREF_DATE_MOOD, "");
+    // We initialise attributes of mood
+    private void initialiseMoodPreferences(){
+        mDate = "";
+        mPositionFistMood = 3;
+        mNoteFirstMood = "";
+    }
 
+    /**
+     * We try to load position and note of mood
+     * If date has change, we save last preferences in file and initialise values
+     */
+    private void loadMoodOfPreferences(){
         if (mDate.isEmpty()){
-            // No date mean no saved data
-            mPositionFistMood = 3;
-            mNoteFirstMood = "";
+            // No date mean no saved data in preferences
+            initialiseMoodPreferences();
         } else {
-            mPositionFistMood = mSharedPreferences.getInt(PREF_POSITION_MOOD, 0);
+            mPositionFistMood = mSharedPreferences.getInt(PREF_POSITION_MOOD, 3);
             mNoteFirstMood = mSharedPreferences.getString(PREF_NOTE_MOOD, "");
-            if (!mDate.equalsIgnoreCase(actualDate)){
-                // We save precedent mood preferences finally in a mood.txt file
-                saveMoodInFile(mPositionFistMood, mNoteFirstMood, mDate);
-                // We clear preferences
-                mSharedPreferences.edit().clear().apply();
-                // We initialise position and note because the day has changed
-                mPositionFistMood = 3;
-                mNoteFirstMood = "";
-            }
         }
     }
 
-    // Register mood object in a file
-    private void saveMoodInFile(int position, String note, String date) {
-        Mood mood = new Mood(mMoodList.get(position).getImageRef(), mMoodList.get(position).getColorRef(), note, date);
-        // We are going to open file mood.txt in writing for save cars
-        try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(new File("mood.txt")))){
-            objectOutputStream.writeObject(mood);
-        } catch (IOException e) {
-            System.out.println("Problème d'écriture de l'objet mMood dans le fichier mood.txt!");
-        }
+    private boolean isSameDate(){
+        // We get actual date
+        Date calendar = Calendar.getInstance().getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getString(R.string.date_format), Locale.FRENCH);
+        String actualDate = simpleDateFormat.format(calendar);
+
+        // We load saved date
+        mDate = mSharedPreferences.getString(PREF_DATE_MOOD, "");
+        return mDate.equalsIgnoreCase(actualDate);
     }
 
-    @Override
-    protected void onStop() {
-        // We save the position of actual mood
-        saveTemporallyMoodPreferences();
-        super.onStop();
+    // save mood object in a file
+    private void saveMoodInFile() {
+        Mood mood = new Mood(mMoodList.get(mPositionFistMood).getImageRef(), mMoodList.get(mPositionFistMood).getColorRef(), mNoteFirstMood, mDate);
+
+        // We get the number of mood in file saved in sharePreferences
+        int savedMoodNumber = mSharedPreferences.getInt(PREF_SAVED_MOOD_NUMBER, 0);
+        // We clear PREF_SAVED_MOOD_NUMBER in preferences
+        mSharedPreferences.edit().remove(PREF_SAVED_MOOD_NUMBER).apply();
+        // If up to 6 mood are saved, we get all moods in list
+        if (savedMoodNumber > 6){
+            MoodFile.deleteMood(this, 0);
+        } else {
+            savedMoodNumber++;
+        }
+        mSharedPreferences.edit().putInt(PREF_SAVED_MOOD_NUMBER, savedMoodNumber).apply();
+        // finally we add new mood in file
+        MoodFile.writeMood(this, mood);
     }
 
     @Override
     public void onClick(View v) {
+        // If we try to modify note or go to next activity and date has changed, we save mood in file
+        if (!isSameDate()){
+            saveMoodInFile();
+            saveMoodInPreferences();
+        }
         switch ((int)v.getTag()){
             case 1:
                 // We configure an editable text
@@ -164,20 +204,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 // Implement AlertDialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                final AlertDialog alertDialog = builder.setTitle("Commentaire")
+                final AlertDialog alertDialog = builder.setTitle(R.string.alert_dialog_note_title)
                         .setView(editText)
-                        .setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.alert_dialog_note_positive_button, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 mNoteFirstMood = editText.getText().toString();
+                                // After we modified note, we save mood in preferences
+                                saveMoodInPreferences();
                             }
-                        }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                        }).setNegativeButton(R.string.alert_dialog_note_negative_button, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
                         }).create();
-
                 alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                             @Override
                             public void onShow(DialogInterface dialog) {
@@ -190,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case 2:
                 // Open the last seven Mood History Activity
                 startActivity(new Intent(MainActivity.this, MoodHistoryActivity.class));
+                break;
         }
     }
 }

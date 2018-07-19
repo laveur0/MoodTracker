@@ -5,13 +5,225 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layout_history_bg"
+    android:weightSum="7"
+    android:orientation="vertical"
     tools:context=".controller.activities.MoodHistoryActivity">
 
-    <ListView
-        android:id="@+id/activity_mood_history_list_view"
+    <LinearLayout
+        android:id="@+id/activity_mood_history_7"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
-        android:scrollbars="none"/>
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:tag="7"
+        android:weightSum="5"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/activity_mood_history_text_view_7"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="5dp"
+            android:textStyle="bold"
+            android:layout_weight="4"/>
+
+        <ImageView
+            android:id="@+id/activity_mood_history_comment_img_7"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_comment_black_48px"
+            android:contentDescription="@string/history_image_view"
+            android:scaleType="centerInside"
+            android:tag="0"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/activity_mood_history_6"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:tag="6"
+        android:weightSum="5"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/activity_mood_history_text_view_6"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="5dp"
+            android:textStyle="bold"
+            android:layout_weight="4"/>
+
+        <ImageView
+            android:id="@+id/activity_mood_history_comment_img_6"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_comment_black_48px"
+            android:contentDescription="@string/history_image_view"
+            android:scaleType="centerInside"
+            android:tag="1"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/activity_mood_history_5"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:tag="5"
+        android:weightSum="5"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/activity_mood_history_text_view_5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="5dp"
+            android:textStyle="bold"
+            android:layout_weight="4"/>
+
+        <ImageView
+            android:id="@+id/activity_mood_history_comment_img_5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_comment_black_48px"
+            android:contentDescription="@string/history_image_view"
+            android:scaleType="centerInside"
+            android:tag="2"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/activity_mood_history_4"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:tag="4"
+        android:weightSum="5"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/activity_mood_history_text_view_4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="5dp"
+            android:textStyle="bold"
+            android:layout_weight="4"/>
+
+        <ImageView
+            android:id="@+id/activity_mood_history_comment_img_4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_comment_black_48px"
+            android:scaleType="centerInside"
+            android:contentDescription="@string/history_image_view"
+            android:tag="3"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/activity_mood_history_3"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:tag="3"
+        android:weightSum="5"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/activity_mood_history_text_view_3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="5dp"
+            android:textStyle="bold"
+            android:layout_weight="4"/>
+
+        <ImageView
+            android:id="@+id/activity_mood_history_comment_img_3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_comment_black_48px"
+            android:scaleType="centerInside"
+            android:contentDescription="@string/history_image_view"
+            android:tag="4"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/activity_mood_history_2"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:tag="2"
+        android:weightSum="5"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/activity_mood_history_text_view_2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="5dp"
+            android:textStyle="bold"
+            android:layout_weight="4"/>
+
+        <ImageView
+            android:id="@+id/activity_mood_history_comment_img_2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_comment_black_48px"
+            android:scaleType="centerInside"
+            android:contentDescription="@string/history_image_view"
+            android:tag="5"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/activity_mood_history_1"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:tag="1"
+        android:weightSum="5"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/activity_mood_history_text_view_1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="5dp"
+            android:textStyle="bold"
+            android:layout_weight="4"/>
+
+        <ImageView
+            android:id="@+id/activity_mood_history_comment_img_1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/history_image_view"
+            android:src="@drawable/ic_comment_black_48px"
+            android:scaleType="centerInside"
+            android:tag="6"
+            android:layout_weight="1"/>
+    </LinearLayout>
 
 </LinearLayout>

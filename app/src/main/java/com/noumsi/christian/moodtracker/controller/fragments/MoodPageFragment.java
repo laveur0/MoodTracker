@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.noumsi.christian.moodtracker.R;
 import com.noumsi.christian.moodtracker.model.Mood;
@@ -60,5 +59,4 @@ public class MoodPageFragment extends Fragment {
 
         return view;
     }
-
 }

@@ -1,8 +1,19 @@
 <resources>
     <string name="app_name">MoodTracker</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_button_note_of_actual_mood">Add button note of actual mood</string>
     <string name="history_button_of_last_seven_registered_mood">History button of last seven registered mood</string>
+    <string name="history_image_view">Image view to represent note of mood</string>
+    <string name="one_days">Hier</string>
+    <string name="two_days">Avant-hier</string>
+    <string name="other_days">Il y a %d jours</string>
+    <string name="one_week">Il y a une semaine</string>
+    <string name="one_week_one_days">Il y a une semaine un jour</string>
+    <string name="one_week_other_days">Il y a une semaine %d jours</string>
+    <string name="other_week_one_days">Il y a %d semaines un jour</string>
+    <string name="other_week_other_days">Il y a %d semaines %d jours</string>
+    <string name="alert_dialog_note_title">Commentaire</string>
+    <string name="alert_dialog_note_positive_button">Valider</string>
+    <string name="alert_dialog_note_negative_button">Annuler</string>
+    <string name="date_format">dd / MM / yyyy</string>
 </resources>
