@@ -17,4 +17,12 @@
     <string name="alert_dialog_note_positive_button">Valider</string>
     <string name="alert_dialog_note_negative_button">Annuler</string>
     <string name="date_format">dd / MM / yyyy</string>
+    <string name="hint_edt_commentaire_popup">Saisissez votre commentaire ici…</string>
+    <string name="smiley_sad">Smiley sad</string>
+    <string name="smiley_disappointed">Smiley disappointed</string>
+    <string name="smiley_normal">Smiley normal</string>
+    <string name="smiley_happy">Smiley happy</string>
+    <string name="smiley_super_happy">Smiley super happy</string>
+    <string name="mime_text_plain">text/plain</string>
+    <string name="sharing_button_description">Button of sharing of actual mood preferences by sending mail or sms</string>
 </resources>

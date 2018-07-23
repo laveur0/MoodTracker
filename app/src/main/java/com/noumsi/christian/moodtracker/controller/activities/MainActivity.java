@@ -30,6 +30,7 @@ public class MainActivity extends ParentActivity implements View.OnClickListener
         // Initialise button widgets
         ImageButton noteButton = findViewById(R.id.activity_main_add_note_ibtn);
         ImageButton historyButton = findViewById(R.id.activity_main_history_ibtn);
+        ImageButton shareButton = findViewById(R.id.activity_main_share_ibtn);
 
         // We define tag for button
         noteButton.setTag(1);
@@ -37,6 +38,7 @@ public class MainActivity extends ParentActivity implements View.OnClickListener
         // We set onClick listener on it
         noteButton.setOnClickListener(this);
         historyButton.setOnClickListener(this);
+        shareButton.setOnClickListener(this);
     }
 
     // Initialise view pager widget and set adapter to it
@@ -75,6 +77,7 @@ public class MainActivity extends ParentActivity implements View.OnClickListener
                 // We configure an editable text
                 final EditText editText = new EditText(this);
                 editText.setTextIsSelectable(true);
+                editText.setHint(R.string.hint_edt_commentaire_popup);
                 editText.setText(mNoteFirstMood);
                 editText.setSelection(mNoteFirstMood.length());
 
@@ -111,6 +114,40 @@ public class MainActivity extends ParentActivity implements View.OnClickListener
                 // Open the last seven Mood History Activity
                 startActivity(new Intent(MainActivity.this, MoodHistoryActivity.class));
                 break;
+            case R.id.activity_main_share_ibtn:
+                shareActualMood();
+                break;
+        }
+    }
+
+    private void shareActualMood(){
+        String textToSend = "";
+        switch (mMoodList.get(mPositionFistMood).getImageRef()){
+            case R.drawable.smiley_sad:
+                textToSend = getString(R.string.smiley_sad);
+                break;
+            case R.drawable.smiley_disappointed:
+                textToSend = getString(R.string.smiley_disappointed);
+                break;
+            case R.drawable.smiley_normal:
+                textToSend = getString(R.string.smiley_normal);
+                break;
+            case R.drawable.smiley_happy:
+                textToSend = getString(R.string.smiley_happy);
+                break;
+            case R.drawable.smiley_super_happy:
+                textToSend = getString(R.string.smiley_super_happy);
+                break;
+        }
+        // We add note to message
+        textToSend += "\n" + mNoteFirstMood;
+        // We create a new instance of intent to share mood
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, textToSend);
+        shareIntent.setType(getString(R.string.mime_text_plain));
+        // Verify that the intent will resolve to an activity
+        if (shareIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(shareIntent);
         }
     }
 }

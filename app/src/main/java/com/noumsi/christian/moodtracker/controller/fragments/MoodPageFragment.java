@@ -45,7 +45,7 @@ public class MoodPageFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_mood_page, container, false);
 
-        // Get widgets from layout and serialise it
+        // serialize widget ImageView
         ImageView smileImg = view.findViewById(R.id.fragment_mood_page_smile_img);
 
         // Get data from bundle

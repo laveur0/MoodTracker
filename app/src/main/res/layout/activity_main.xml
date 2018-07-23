@@ -33,4 +33,16 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/history_button_of_last_seven_registered_mood"
         android:src="@drawable/ic_history_black" />
+
+    <ImageButton
+        android:id="@+id/activity_main_share_ibtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_ibtn_home"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/sharing_button_description"
+        android:src="@drawable/baseline_share_black_36" />
+
 </RelativeLayout>
